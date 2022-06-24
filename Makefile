@@ -14,7 +14,7 @@ help all:
 
 .PHONY: build
 build: ## Build an image
-	@docker image build --tag andrebienemann/djl $(ROOT)
+	@docker image build --no-cache --tag andrebienemann/djl $(ROOT)
 
 .PHONY: publish
 publish: ## Publish an image
