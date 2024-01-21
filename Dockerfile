@@ -1,23 +1,24 @@
 ARG VERSION=3.11-slim
 
-FROM python:${VERSION} as base
+FROM python:${VERSION} AS base
 
-RUN apt update && apt upgrade -y --fix-missing
-RUN apt install -y htop make gcc git vim nano curl wget zsh cntlm jq zip unzip
+RUN apt update && apt -y upgrade
+RUN apt install -y gcc cntlm htop
+RUN apt install -y make git vim nano
+RUN apt install -y curl wget jq zip unzip
 
 FROM base AS python
 
 SHELL ["/bin/bash", "-c"]
-RUN python3 -m venv ~/.venv && source ~/.venv/bin/activate && pip install --upgrade pip setuptools
 
-FROM python AS jupyter
-
-SHELL ["/bin/bash", "-c"]
+RUN python3 -m venv ~/.venv
 RUN source ~/.venv/bin/activate && pip install jupyterlab
 
-FROM jupyter AS zsh
+FROM python AS zsh
 
+RUN apt install -y zsh
 RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+
 ENV SHELL=/usr/bin/zsh
 
 FROM zsh AS scripts
